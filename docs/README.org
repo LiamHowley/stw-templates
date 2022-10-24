@@ -1,0 +1,45 @@
+#+LATEX_CLASS: stw-documentation
+#+TITLE: STW-Template
+#+AUTHOR: Liam Howley
+
+#+OPTIONS: toc
+
+** Introduction
+
+STW-Templates is a trivial wrapper around Djula. The main differences are how templates are stored. In Djula a template is compiled and stored in a cached store. In STW-Templates, a template slot in the layered class TEMPLATE-CLASS is assigned a compiled template, of type DJULA:COMPILED-TEMPLATE.
+
+** Defining a Template Class
+
+To define a class of type TEMPLATE-CLASS called PAGE with the slots TITLE, SUBTITLE and BODY:
+
+#+BEGIN_SRC lisp
+
+(define-template-class page ()
+  (title subtitle body)
+  (:template . ("stw-templates" "test/templates1/index.html")))
+  
+#+END_SRC
+
+The class slot TEMPLATE accepts a list of two arguments: the system name, and the relative path to the filename of the template. These are the arguments passed to ASDF:SYSTEM-RELATIVE-PATHNAME during initialization, the result of which is used to generate a compiled template of type DJULA:COMPILED-TEMPLATE, which is assigned in turn to the template slot.
+
+Each slot, (title, subtitle and body - as per above), can be manually described or will automatically have an initarg assigned by the macro CL-COMP:DEFINE-BASE-CLASS. Each slot will be of the type TEMPLATE-SLOT-DEFINITION.
+
+** Writing a template
+
+Template writing as per Djula is relatively straight forward, and follows the model of Django templates. STW-Templates adds nothing new here, so it is recommended to view the [[https://githib.com/mmontone/djula][source]] and [[https://mmontone.github.io/djula/djula/][documentation]] of Djula.
+
+** Rendering
+
+To render a page, use the generic function RENDER-TEMPLATE.
+
+#+BEGIN_SRC lisp
+
+(render-template (make-instance 'page :title "Foo" :subtitle "bar" :body "baz"))
+
+#+END_SRC
+
+The optional argument arg is ignored in this instance as the arguments are derived from the slots of type TEMPLATE-SLOT-DEFINITION. These are both directly defined slots and slots inherited from other clases of type TEMPLATE-CLASS.
+
+** Acknowledgements
+
+My thanks to [[https://githib.com/mmontone/djula][M. Montone]].
