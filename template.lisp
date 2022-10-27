@@ -13,7 +13,11 @@
   :in template-layer (base-class)
   ((template :initarg :template
 	     :reader template
-	     :documentation "The slot template must be assigned a list of '(<system-name> <template-file-address> during initialization. A call is made to ASDF:SYSTEM-RELATIVE-PATHNAME to get the relative directory to work with. If the file exists, it Will be compiled to type DJULA:COMPILED-TEMPLATE and the slot mutated."))
+	     :documentation "The slot template must be assigned a list of 
+(<system-name> <template-file-address>) during initialization. A call is 
+made to ASDF:SYSTEM-RELATIVE-PATHNAME to get the relative directory to 
+work with. If the file exists, it Will be compiled to type 
+DJULA:COMPILED-TEMPLATE and the slot mutated."))
   (:documentation "Defining metaclass for TEMPLATE-CLASS. With slot template."))
 
 (defmethod partial-class-base-initargs append ((class base-template-class))
