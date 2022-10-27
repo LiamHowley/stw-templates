@@ -40,6 +40,7 @@
 
   (:export
    :template
+   :template-context-class
    :template-layer
    :template-class
 
