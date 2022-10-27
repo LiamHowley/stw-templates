@@ -58,6 +58,14 @@
 
 
 (define-layered-function render-template (template-class &optional stream args)
+  (:documentation "Render template accepts either a TEMPLATE-CLASS or an 
+instance of TEMPLATE-CLASS, and two optional arguments, a stream and a plist of 
+(:<template variable> <value>). When dispatching on an instance, the optional 
+argument args is ignored as the arguments are derived from the slots of type 
+TEMPLATE-SLOT-DEFINITION.
+
+If the class of the object is instead passed to RENDER-TEMPLATE the optional 
+args must contain the aforementioned plist of template variables and values.")
 
   (:method
       :in template-layer ((template-class template-class) &optional stream args)
@@ -67,5 +75,9 @@
   (:method
       :in template-layer ((instance serialize) &optional stream args)
     (declare (ignore args))
+
+    ;; As object-to-plist uses the first initarg available in the list of
+    ;; slot initargs, it works despite the possible mismatch between
+    ;; slot names and template variables.
     (render-template (class-of instance) stream
 		     (cdr (object-to-plist instance :filter 'template-slot-definition)))))

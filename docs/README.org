@@ -38,7 +38,9 @@ To render a page, use the generic function RENDER-TEMPLATE.
 
 #+END_SRC
 
-The optional argument arg is ignored in this instance as the arguments are derived from the slots of type TEMPLATE-SLOT-DEFINITION. These are both directly defined slots and slots inherited from other clases of type TEMPLATE-CLASS.
+Render template accepts either a TEMPLATE-CLASS or an instance of TEMPLATE-CLASS, and two optional arguments, a stream and a plist of (:<template variable> <value>). The optional argument args is ignored in this instance as the arguments are derived from the slots of type TEMPLATE-SLOT-DEFINITION. These are both directly defined slots and slots inherited from other classes of type TEMPLATE-CLASS. The process is automated by use of the function OBJECT-TO-PLIST from CL-COMP, which matches the primary initarg of a slot with the slots value, and returns a plist of (<initarg> <value>) appended to the class name.
+
+If the class of the object is instead passed to RENDER-TEMPLATE the optional args must contain the aforementioned plist of template variables and values.
 
 ** Acknowledgements
 
