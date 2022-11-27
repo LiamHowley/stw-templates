@@ -8,17 +8,29 @@
   ()
   (:metaclass template-context-class))
 
+(defgeneric compiled-template (template)
+  (:documentation "Accessor for TEMPLATE slot of the BASE-TEMPLATE-CLASS")
+  (:method (template) nil))
 
 (define-layered-class base-template-class
   :in template-layer (base-class)
   ((template :initarg :template
-	     :reader template
+	     :reader compiled-template
+	     :special t
 	     :documentation "The slot template must be assigned a list of 
 (<system-name> <template-file-address>) during initialization. A call is 
 made to ASDF:SYSTEM-RELATIVE-PATHNAME to get the relative directory to 
 work with. If the file exists, it Will be compiled to type 
 DJULA:COMPILED-TEMPLATE and the slot mutated."))
   (:documentation "Defining metaclass for TEMPLATE-CLASS. With slot template."))
+
+(defmethod (setf compiled-template)
+  (new-value (class base-template-class))
+  (with-slots (template) class
+    (awhen (apply #'asdf:system-relative-pathname new-value)
+      (when (open self :direction :probe :if-does-not-exist :create)
+	(setf (slot-value class 'template) self)
+	(compile-template class)))))
 
 (defmethod partial-class-base-initargs append ((class base-template-class))
   '(:template))
@@ -48,10 +60,7 @@ DJULA:COMPILED-TEMPLATE and the slot mutated."))
 
 (define-layered-method initialize-in-context
   :in template-layer ((class base-template-class) &key template)
-  (awhen (apply #'asdf:system-relative-pathname template)
-    (when (probe-file self)
-      (setf (slot-value class 'template) self)
-      (compile-template class))))
+  (setf (compiled-template class) template))
 
 
 (define-layered-function compile-template (template)
