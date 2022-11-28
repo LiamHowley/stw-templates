@@ -41,8 +41,11 @@
   (:export
    :template
    :template-context-class
+   :template-slot-definition
    :template-layer
    :template-class
 
    :define-template-class
-   :render-template))
+   :render-template
+   :compiled-template
+   :compile-template))
