@@ -25,12 +25,13 @@ DJULA:COMPILED-TEMPLATE and the slot mutated."))
   (:documentation "Defining metaclass for TEMPLATE-CLASS. With slot template."))
 
 (defmethod (setf compiled-template)
-  (new-value (class base-template-class))
+    (new-value (class base-template-class))
   (with-slots (template) class
-    (awhen (apply #'asdf:system-relative-pathname new-value)
-      (when (open self :direction :probe :if-does-not-exist :create)
-	(setf (slot-value class 'template) self)
-	(compile-template class)))))
+    (when (consp template)
+      (awhen (apply #'asdf:system-relative-pathname new-value)
+	(when (open self :direction :probe :if-does-not-exist :create)
+	  (setf (slot-value class 'template) self)
+	  (compile-template class))))))
 
 (defmethod partial-class-base-initargs append ((class base-template-class))
   '(:template))
