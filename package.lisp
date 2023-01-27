@@ -44,6 +44,7 @@
    :template-slot-definition
    :template-layer
    :template-class
+   :base-template-class
 
    :define-template-class
    :render-template
