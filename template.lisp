@@ -87,11 +87,9 @@ args must contain the aforementioned plist of template variables and values.")
       (apply #'djula:render-template* template stream args)))
 
   (:method
-      :in template-layer ((instance serialize) &optional stream args)
-    (declare (ignore args))
-
+      :in template-layer
+      ((instance serialize) &optional stream (args (object-to-plist instance)))
     ;; As object-to-plist uses the first initarg available in the list of
     ;; slot initargs, it works despite the possible mismatch between
     ;; slot names and template variables.
-    (render-template (class-of instance) stream
-		     (cdr (object-to-plist instance :filter 'template-slot-definition)))))
+    (render-template (class-of instance) stream args)))
