@@ -20,7 +20,7 @@
 
 
 (define-test sanity-test
-  (of-type djula::compiled-template (template (find-class 'page)))
+  (of-type djula::compiled-template (compiled-template (find-class 'page)))
   (is string=
       "<!DOCTYPE html>
 <html>
@@ -42,7 +42,7 @@
 "
       (with-active-layers (template-layer)
 	(render-template (make-instance 'page :title "Welcome to the site of Foo!" :name "Foo"))))
-  (of-type djula::compiled-template (template (find-class 'other-pages)))
+  (of-type djula::compiled-template (compiled-template (find-class 'other-pages)))
   (is string=
       "<!DOCTYPE html>
 <html>

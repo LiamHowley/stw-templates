@@ -27,11 +27,17 @@ DJULA:COMPILED-TEMPLATE and the slot mutated."))
 (defmethod (setf compiled-template)
     (new-value (class base-template-class))
   (with-slots (template) class
-    (when (consp template)
-      (awhen (apply #'asdf:system-relative-pathname new-value)
-	(when (open self :direction :probe :if-does-not-exist :create)
-	  (setf (slot-value class 'template) self)
-	  (compile-template class))))))
+    (etypecase template
+      (cons
+       (awhen (apply #'asdf:system-relative-pathname new-value)
+	 (when (open self :direction :probe :if-does-not-exist :create)
+	   (setf (slot-value class 'template) self)
+	   (compile-template class))))
+      (pathname
+       (compile-template class))
+      (djula::compiled-template 
+       template))))
+
 
 (defmethod partial-class-base-initargs append ((class base-template-class))
   '(:template))
